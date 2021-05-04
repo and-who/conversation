@@ -22,28 +22,45 @@ export const talk = (conversationNode: ConversationNode, npc: NPC, gameObject: G
   conversationNode.text.forEach(textFragment => console.log(`${npc.name}: ${textFragment}`))
   if(conversationNode.options && conversationNode.options.length > 0){
     console.log("---");
-    let selectedOption = null;
+    let selectedOptionIndex = null;
   
     const onlyPossibleOptions = conversationNode.options.filter(conversationOption => conversationOption.checkPossible ? conversationOption.checkPossible(gameObject) : true)
+    
     onlyPossibleOptions.forEach((conversationOption, index) => {
-      console.log(`${index+1}): ${conversationOption.text}`)
+      console.log(`${index+1}.) ${conversationOption.text}`)
     });
-    while(!selectedOption) {
-      selectedOption = parseInt(prompt(" -> "))
-      selectedOption = selectedOption <= conversationNode.options.length ? selectedOption : null
+    console.log("0.) Leave");
+
+    while(selectedOptionIndex === null) {
+      selectedOptionIndex = parseInt(prompt(" -> ")) - 1
+      selectedOptionIndex = selectedOptionIndex <= onlyPossibleOptions.length ? selectedOptionIndex : null
     }
 
-    console.log(`Player: ${conversationNode.options[selectedOption-1].text}`)
+    if(selectedOptionIndex >= 0 && selectedOptionIndex < onlyPossibleOptions.length){
+      console.log(`Player: ${onlyPossibleOptions[selectedOptionIndex].text}`)
 
-    const nextNode = conversationNode.options[selectedOption-1].nextNode
-    if(nextNode){
-      talk(nextNode, npc, gameObject)
+      const nextNode = onlyPossibleOptions[selectedOptionIndex]?.nextNode
+      if(nextNode){
+        if(nextNode.action) {
+          nextNode.action(gameObject)
+        }
+        talk(nextNode, npc, gameObject)
+      } else {
+        console.log("0.) Leave");
+        while(parseInt(prompt(" -> ")) !== 0){
+          console.log("Player: Bye");
+        }
+      }
+    }
+  } else {
+    console.log("0.) Leave");
+    while(parseInt(prompt(" -> ")) !== 0){
+      console.log("Player: Bye");
     }
   }
 }
 
 export const talkSystem = (npc: NPC, gameObject: GameObject) => {
-  console.clear()
   talk(npc.conversation, npc, gameObject)
 }
 
