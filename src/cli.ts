@@ -1,4 +1,6 @@
 #!/usr/bin/env node
-import { foo } from './main'
+import runGame from './Game/Game'
 
-foo()
+
+runGame()
+
