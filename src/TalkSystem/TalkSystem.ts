@@ -7,6 +7,7 @@ const prompt = Prompt()
 export interface ConversationOption {
   text: string[];
   used?: boolean;
+  checkPossible?: (gameObject: GameObject) => boolean
   nextNode?: ConversationNode
 }
 
@@ -23,7 +24,8 @@ export const talk = (conversationNode: ConversationNode, npc: NPC, gameObject: G
     console.log("---");
     let selectedOption = null;
   
-    conversationNode.options.forEach((conversationOption, index) => {
+    const onlyPossibleOptions = conversationNode.options.filter(conversationOption => conversationOption.checkPossible ? conversationOption.checkPossible(gameObject) : true)
+    onlyPossibleOptions.forEach((conversationOption, index) => {
       console.log(`${index+1}): ${conversationOption.text}`)
     });
     while(!selectedOption) {
