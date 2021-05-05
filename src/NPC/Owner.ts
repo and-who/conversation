@@ -26,7 +26,7 @@ export const owner:NPC = {
         nextNode: {
           text: ["It seems you are a nice Guy", "Here is your Room Key"],
           action: (gameObject: GameObject) => {
-            gameObject.hasRoomKey=true
+            gameObject.inventory.push("roomkey")
             return gameObject
           },
         },

@@ -1,21 +1,22 @@
 import talkSystem from '../TalkSystem/TalkSystem'
 import owner from "../NPC/Owner"
+import kitchenLady from "../NPC/KitchenLady"
 import Prompt from 'prompt-sync'
 
 const prompt = Prompt()
 export interface GameObject {
   knowsInfinity: boolean;
-  hasRoomKey: boolean;
+  inventory: string[];
 }
 
 const gameObject: GameObject = {
   knowsInfinity: false,
-  hasRoomKey: false
+  inventory: []
 }
 
 export const runGame = () => {
   let exit = false
-  const npcs = [owner]
+  const npcs = [owner, kitchenLady]
 
   while(!exit){
     let selectedNpcIndex = null;
